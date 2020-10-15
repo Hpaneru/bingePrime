@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "91126687659",
+    "firebase_url": "https://bingeprime-c4237.firebaseio.com",
+    "project_id": "bingeprime-c4237",
+    "storage_bucket": "bingeprime-c4237.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:91126687659:android:bfedc1bba1a9fd3a3654ee",
+        "android_client_info": {
+          "package_name": "com.binge_prime"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "91126687659-3ktjg690ijbhj1ko8hp3uv9ucspfobpp.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBdIFUXe6tRhyXtQ7_O3yKyBlGI0z28N5A"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "91126687659-3ktjg690ijbhj1ko8hp3uv9ucspfobpp.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
