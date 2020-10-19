@@ -1,7 +1,6 @@
 import 'package:binge_prime/helpers/colors.dart';
 import 'package:binge_prime/helpers/firebase.dart';
 import 'package:binge_prime/screens/signup.dart';
-import 'package:binge_prime/widgets/button.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:mdi/mdi.dart';
@@ -15,11 +14,10 @@ class _LoginScreenState extends State<LoginScreen> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
   String email, password;
-  bool showPassword = false, autoValidate = false, loading = false;
+  bool showPassword = false, loading = false;
 
   showSnackbar(message) {
     _scaffoldKey.currentState.showSnackBar(SnackBar(
-      // behavior: SnackBarBehavior.floating,
       backgroundColor: Theme.of(context).accentColor,
       content: Text(message),
     ));
@@ -120,7 +118,7 @@ class _LoginScreenState extends State<LoginScreen> {
                           child: TextField(
                             style: TextStyle(color: AppColors.backgroundColor),
                             cursorColor: AppColors.backgroundColor,
-                            textCapitalization: TextCapitalization.words,
+                            keyboardType: TextInputType.emailAddress,
                             decoration: InputDecoration(
                               fillColor: AppColors.textFieldBackgroundColor,
                               filled: true,
@@ -211,59 +209,43 @@ class _LoginScreenState extends State<LoginScreen> {
                           ),
                         ),
                       ),
-                      // SizedBox(height: 10),
-                      // // FlatButton(
-                      // //   onPressed: null,
-                      // //   child: Text("Forgot Password?"),
-                      // // ),
-                      RaisedButton(
-                        onPressed: null,
-                        child: Text("CLICK ME"),
-                      ),
                       SizedBox(height: 50),
-                      Padding(
-                        padding: const EdgeInsets.only(left: 80, right: 80),
-                        child: CustomButton(
-                          onPress: tryLoggingIn,
-                          label: "LOGIN",
-                          loading: loading,
-                          borderRadius: false,
-                        ),
+                      RaisedButton(
+                        onPressed: tryLoggingIn,
+                        child: Text("LOGIN"),
+                        color: AppColors.flatButtonColor,
                       ),
-                      SizedBox(height: 30),
-                      Padding(
-                        padding: const EdgeInsets.only(left: 80),
-                        child: RichText(
-                          text: TextSpan(
-                            text: "Or",
-                            style: Theme.of(context)
-                                .primaryTextTheme
-                                .subtitle1
-                                .copyWith(
-                                    color: Theme.of(context)
-                                        .disabledColor
-                                        .withAlpha(120)),
-                            children: <TextSpan>[
-                              TextSpan(
-                                text: ' Signup',
-                                style: Theme.of(context)
-                                    .primaryTextTheme
-                                    .subtitle1
-                                    .copyWith(
-                                      color: Theme.of(context).primaryColor,
+                      SizedBox(height: 10),
+                      RichText(
+                        text: TextSpan(
+                          text: "Or ",
+                          style: Theme.of(context)
+                              .primaryTextTheme
+                              .subtitle1
+                              .copyWith(
+                                  color: Theme.of(context)
+                                      .disabledColor
+                                      .withAlpha(120)),
+                          children: <TextSpan>[
+                            TextSpan(
+                              text: ' Signup',
+                              style: Theme.of(context)
+                                  .primaryTextTheme
+                                  .subtitle1
+                                  .copyWith(
+                                    color: AppColors.backgroundColor,
+                                  ),
+                              recognizer: TapGestureRecognizer()
+                                ..onTap = () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => SignupScreen(),
                                     ),
-                                recognizer: TapGestureRecognizer()
-                                  ..onTap = () {
-                                    Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                        builder: (context) => SignupScreen(),
-                                      ),
-                                    );
-                                  },
-                              ),
-                            ],
-                          ),
+                                  );
+                                },
+                            ),
+                          ],
                         ),
                       ),
                     ],

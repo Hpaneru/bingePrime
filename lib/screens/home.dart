@@ -1,5 +1,5 @@
 import 'package:binge_prime/helpers/firebase.dart';
-import 'package:binge_prime/screens/login.dart';
+import 'package:binge_prime/screens/intro.dart';
 import 'package:flutter/material.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -25,7 +25,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       Navigator.pushReplacement(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => LoginScreen(),
+                          builder: (context) => IntroScreen(),
                         ),
                       );
                     });

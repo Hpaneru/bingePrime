@@ -1,9 +1,10 @@
 class User {
-  String id, email, token;
+  String id, name, email, token;
 
   static User fromMap(var data) {
     return User()
       ..id = data["id"]
+      ..name = data["name"]
       ..email = data["email"]
       ..token = data["token"];
   }
@@ -11,6 +12,7 @@ class User {
   toMap() {
     return {
       "id": id,
+      "name": name,
       "email": email,
       "token": token,
     };

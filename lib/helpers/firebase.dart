@@ -24,11 +24,15 @@ class _FirebaseHelper {
     return result.user;
   }
 
-  Future signup(email, password) async {
+  Future signup(name, email, password) async {
     var user = (await _auth.createUserWithEmailAndPassword(
             email: email, password: password))
         .user;
     _user = user;
+    var info = UserUpdateInfo();
+    info.displayName = name;
+    await _user.updateProfile(info);
+    _user = await _auth.currentUser();
     await manageFirestore();
   }
 
@@ -36,6 +40,7 @@ class _FirebaseHelper {
     _analytics.logLogin();
     await createUser(User.fromMap({
       "id": _user.uid,
+      "name": _user.displayName,
       "email": _user.email ?? "",
       "token": await _messaging.getToken(),
     }));
