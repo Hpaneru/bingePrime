@@ -54,6 +54,10 @@ class _FirebaseHelper {
         .setData(userData.toMap(), merge: true);
   }
 
+  resetPasswordRequest(email) {
+    return _auth.sendPasswordResetEmail(email: email);
+  }
+
   Future<User> getUserInfo({uid}) async {
     if (uid == null) {
       if (_me != null) {

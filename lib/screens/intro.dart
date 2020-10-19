@@ -1,6 +1,5 @@
 import 'package:binge_prime/helpers/colors.dart';
-import 'package:binge_prime/screens/login.dart';
-import 'package:binge_prime/widgets/button.dart';
+import 'package:binge_prime/widgets/custom_button.dart';
 import 'package:flutter/material.dart';
 
 class IntroScreen extends StatefulWidget {
