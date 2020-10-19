@@ -1,3 +1,4 @@
+import 'package:binge_prime/helpers/colors.dart';
 import 'package:binge_prime/helpers/firebase.dart';
 import 'package:binge_prime/screens/signup.dart';
 import 'package:binge_prime/widgets/button.dart';
@@ -12,14 +13,13 @@ class LoginScreen extends StatefulWidget {
 
 class _LoginScreenState extends State<LoginScreen> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
-  var _formKey = GlobalKey<FormState>();
 
   String email, password;
   bool showPassword = false, autoValidate = false, loading = false;
 
   showSnackbar(message) {
     _scaffoldKey.currentState.showSnackBar(SnackBar(
-      behavior: SnackBarBehavior.floating,
+      // behavior: SnackBarBehavior.floating,
       backgroundColor: Theme.of(context).accentColor,
       content: Text(message),
     ));
@@ -32,8 +32,13 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   tryLoggingIn() {
-    if (_formKey.currentState.validate()) {
-      _formKey.currentState.save();
+    if (email == null || password == null) {
+      showSnackbar("Please Don't Leave any field Empty");
+      return;
+    } else if (!firebase.isEmail(email)) {
+      showSnackbar("Invalid Email Formate");
+      return;
+    } else {
       showLoading(true);
       firebase.login(email, password).then((user) {
         showLoading(false);
@@ -53,98 +58,184 @@ class _LoginScreenState extends State<LoginScreen> {
       body: SafeArea(
         child: Container(
           height: MediaQuery.of(context).size.height,
+          width: MediaQuery.of(context).size.width,
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
+              colors: AppColors.gradientColors,
+            ),
+          ),
           child: SingleChildScrollView(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               mainAxisSize: MainAxisSize.min,
               children: <Widget>[
-                Form(
-                  key: _formKey,
-                  child: Padding(
-                    padding: const EdgeInsets.all(16.0),
-                    child: Column(
-                      children: <Widget>[
-                        SizedBox(height: 100),
-                        Text(
-                          "LOGIN",
-                          style: TextStyle(fontSize: 20),
+                Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      SizedBox(
+                        height: 100.0,
+                      ),
+                      Text(
+                        "LOGIN",
+                        style: Theme.of(context)
+                            .primaryTextTheme
+                            .headline6
+                            .copyWith(
+                                fontSize: 50, color: AppColors.backgroundColor),
+                      ),
+                      Text(
+                        "to start play",
+                        style: Theme.of(context)
+                            .primaryTextTheme
+                            .headline2
+                            .copyWith(
+                                fontSize: 16, color: AppColors.backgroundColor),
+                      ),
+                      SizedBox(height: 50),
+                      Text(
+                        "Your Email",
+                        style: Theme.of(context)
+                            .primaryTextTheme
+                            .headline2
+                            .copyWith(
+                                fontSize: 16, color: AppColors.backgroundColor),
+                      ),
+                      SizedBox(height: 10),
+                      Container(
+                        decoration: BoxDecoration(
+                          boxShadow: [
+                            BoxShadow(
+                              color: AppColors.customButtonColor,
+                              blurRadius: 6,
+                            ),
+                          ],
                         ),
-                        SizedBox(
-                          height: 50.0,
-                        ),
-                        TextFormField(
-                          autovalidate: autoValidate,
-                          decoration: InputDecoration(
-                            hintStyle: Theme.of(context).textTheme.caption,
-                            labelText: "YOUR EMAIL",
-                            labelStyle: Theme.of(context)
-                                .textTheme
-                                .caption
-                                .copyWith(
-                                    color: Theme.of(context)
-                                        .disabledColor
-                                        .withAlpha(120)),
+                        child: Theme(
+                          data: ThemeData(
+                              primaryColor: AppColors.customButtonColor),
+                          child: TextField(
+                            style: TextStyle(color: AppColors.backgroundColor),
+                            cursorColor: AppColors.backgroundColor,
+                            textCapitalization: TextCapitalization.words,
+                            decoration: InputDecoration(
+                              fillColor: AppColors.textFieldBackgroundColor,
+                              filled: true,
+                              enabledBorder: OutlineInputBorder(
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(8)),
+                                borderSide: BorderSide(
+                                    width: 1,
+                                    color: AppColors.customButtonColor),
+                              ),
+                              border: OutlineInputBorder(
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(8)),
+                                borderSide: BorderSide(
+                                    width: 1,
+                                    color: AppColors.customButtonColor),
+                              ),
+                            ),
+                            onChanged: (value) {
+                              setState(() {
+                                email = (value ?? "").trim();
+                              });
+                            },
                           ),
-                          validator: (value) {
-                            value = value.trim();
-                            if (value.isEmpty)
-                              return "Mandatory Field";
-                            else if (!firebase.isEmail(value))
-                              return "Invalid Email";
-                            return null;
-                          },
-                          onSaved: (value) {
-                            email = (value ?? "").trim();
-                          },
                         ),
-                        SizedBox(height: 20.0),
-                        TextFormField(
-                          autovalidate: autoValidate,
-                          decoration: InputDecoration(
-                            hintStyle: Theme.of(context).textTheme.caption,
-                            labelText: "PASSWORD",
-                            labelStyle: Theme.of(context)
-                                .textTheme
-                                .caption
-                                .copyWith(
-                                    color: Theme.of(context)
-                                        .disabledColor
-                                        .withAlpha(120)),
-                            suffixIcon: IconButton(
-                                icon: Icon(showPassword ? Mdi.eye : Mdi.eyeOff),
-                                onPressed: () {
-                                  setState(() {
-                                    showPassword = !showPassword;
-                                  });
-                                }),
+                      ),
+                      SizedBox(height: 20.0),
+                      Text(
+                        "Password",
+                        style: Theme.of(context)
+                            .primaryTextTheme
+                            .headline2
+                            .copyWith(
+                                fontSize: 16, color: AppColors.backgroundColor),
+                      ),
+                      SizedBox(height: 10),
+                      Container(
+                        decoration: BoxDecoration(
+                          boxShadow: [
+                            BoxShadow(
+                              color: AppColors.customButtonColor,
+                              blurRadius: 6,
+                            ),
+                          ],
+                        ),
+                        child: Theme(
+                          data: ThemeData(
+                              primaryColor: AppColors.customButtonColor),
+                          child: TextField(
+                            style: TextStyle(color: AppColors.backgroundColor),
+                            cursorColor: AppColors.backgroundColor,
+                            textCapitalization: TextCapitalization.words,
+                            decoration: InputDecoration(
+                              fillColor: AppColors.textFieldBackgroundColor,
+                              filled: true,
+                              enabledBorder: OutlineInputBorder(
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(8)),
+                                borderSide: BorderSide(
+                                    width: 1,
+                                    color: AppColors.customButtonColor),
+                              ),
+                              border: OutlineInputBorder(
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(8)),
+                                borderSide: BorderSide(
+                                    width: 1,
+                                    color: AppColors.customButtonColor),
+                              ),
+                              suffixIcon: IconButton(
+                                  icon: Icon(
+                                    showPassword ? Mdi.eye : Mdi.eyeOff,
+                                    color: AppColors.backgroundColor,
+                                  ),
+                                  onPressed: () {
+                                    setState(() {
+                                      showPassword = !showPassword;
+                                    });
+                                  }),
+                            ),
+                            onChanged: (value) {
+                              setState(() {
+                                password = value;
+                              });
+                            },
+                            obscureText: !showPassword,
+                            enableInteractiveSelection: true,
                           ),
-                          validator: (value) {
-                            if (value.isEmpty) return "mandatory field";
-
-                            if (value.length > 20) return "password too long";
-                            return null;
-                          },
-                          onSaved: (value) {
-                            password = value;
-                          },
-                          obscureText: !showPassword,
-                          enableInteractiveSelection: true,
                         ),
-                        SizedBox(height: 10),
-                        FlatButton(
-                          onPressed: null,
-                          child: Text("Forgot Password?"),
-                        ),
-                        SizedBox(height: 20),
-                        CustomButton(
+                      ),
+                      // SizedBox(height: 10),
+                      // // FlatButton(
+                      // //   onPressed: null,
+                      // //   child: Text("Forgot Password?"),
+                      // // ),
+                      RaisedButton(
+                        onPressed: null,
+                        child: Text("CLICK ME"),
+                      ),
+                      SizedBox(height: 50),
+                      Padding(
+                        padding: const EdgeInsets.only(left: 80, right: 80),
+                        child: CustomButton(
                           onPress: tryLoggingIn,
                           label: "LOGIN",
                           loading: loading,
+                          borderRadius: false,
                         ),
-                        SizedBox(height: 60),
-                        RichText(
+                      ),
+                      SizedBox(height: 30),
+                      Padding(
+                        padding: const EdgeInsets.only(left: 80),
+                        child: RichText(
                           text: TextSpan(
-                            text: "Don't Have Account",
+                            text: "Or",
                             style: Theme.of(context)
                                 .primaryTextTheme
                                 .subtitle1
@@ -174,8 +265,8 @@ class _LoginScreenState extends State<LoginScreen> {
                             ],
                           ),
                         ),
-                      ],
-                    ),
+                      ),
+                    ],
                   ),
                 ),
               ],
