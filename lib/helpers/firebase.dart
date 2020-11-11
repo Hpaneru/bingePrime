@@ -1,4 +1,5 @@
 import 'package:binge_prime/models/user.dart';
+import 'package:binge_prime/models/video.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -11,6 +12,12 @@ class _FirebaseHelper {
   Firestore _firestore = Firestore();
   FirebaseUser _user;
   User _me;
+
+  init() async {
+    _auth.onAuthStateChanged.listen((user) async {
+      _user = user;
+    });
+  }
 
   bool isEmail(String em) => RegExp(
           r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$')
@@ -70,9 +77,9 @@ class _FirebaseHelper {
     return User.fromMap(user.data);
   }
 
-  // User getCurrentUser() {
-  //   return _user;
-  // }
+  FirebaseUser getCurrentUser() {
+    return _user;
+  }
 
   Stream<FirebaseUser> getUserStateListener() {
     return _auth.onAuthStateChanged;
@@ -85,6 +92,12 @@ class _FirebaseHelper {
     } catch (e) {
       print(e);
     }
+  }
+
+  Future<List<Video>> getVideos() async {
+    Query videoRef = _firestore.collection("videos");
+    QuerySnapshot videos = await videoRef.getDocuments();
+    return videos.documents.map((video) => Video.fromMap(video.data)).toList();
   }
 }
 

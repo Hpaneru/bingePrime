@@ -1,7 +1,7 @@
 name: binge_prime
 description: A new Flutter project.
 
-publish_to: 'none' 
+publish_to: 'none'
 
 version: 1.0.0+1
 
@@ -11,15 +11,16 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  cupertino_icons:
-  cloud_firestore:
-  firebase_messaging:
+  cloud_firestore: null
+  cupertino_icons: null
+  firebase_analytics: null
   firebase_auth: ^0.16.0
-  google_sign_in:
-  firebase_analytics:
-  mdi:
-  firebase_core:
-
+  firebase_core: null
+  firebase_messaging: null
+  google_sign_in: null
+  mdi: null
+  video_player:
+  youtube_player_flutter: ^7.0.0+7
 
 dev_dependencies:
   flutter_test:

@@ -39,6 +39,7 @@ class _SplashScreenState extends State<SplashScreen> {
       }
     } else {
       try {
+        await firebase.init();
         Navigator.pushNamedAndRemoveUntil(
             context, "/homeScreen", (predicate) => false);
       } catch (e) {
@@ -54,11 +55,12 @@ class _SplashScreenState extends State<SplashScreen> {
         height: MediaQuery.of(context).size.height,
         width: MediaQuery.of(context).size.width,
         decoration: BoxDecoration(
-            gradient: LinearGradient(
-          begin: Alignment.topCenter,
-          end: Alignment.bottomCenter,
-          colors: AppColors.gradientColors,
-        )),
+          gradient: LinearGradient(
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+            colors: AppColors.gradientColors,
+          ),
+        ),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: <Widget>[
