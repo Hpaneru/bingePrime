@@ -1,12 +1,13 @@
 class Video {
-  String id, title, link, description, category, created, creator;
+  String id, title, link, description, category, created, creator, iconUrl;
 
   static Video fromMap(var data) {
     return Video()
       ..id = data["id"]
       ..title = data["title"]
       ..link = data["link"]
-      ..description = data["description"];
+      ..description = data["description"]
+      ..iconUrl = data["iconUrl"];
   }
 
   toMap() {
@@ -18,6 +19,7 @@ class Video {
       "category": category,
       "created": created,
       "creator": creator,
+      "iconUrl": iconUrl,
     };
   }
 }

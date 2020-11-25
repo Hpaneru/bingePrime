@@ -109,7 +109,8 @@ class _VideoPlayerWidgetState extends State<VideoPlayerWidget>
       body: SafeArea(
         child: Column(
           children: <Widget>[
-            Expanded(
+            Container(
+              padding: const EdgeInsets.all(8.0),
               child: _controller.value.initialized
                   ? AspectRatio(
                       aspectRatio: _controller.value.aspectRatio,

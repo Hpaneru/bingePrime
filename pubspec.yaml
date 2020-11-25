@@ -19,9 +19,9 @@ dependencies:
   firebase_messaging: null
   google_sign_in: null
   mdi: null
-  video_player:
-  youtube_player_flutter: ^7.0.0+7
-
+  video_player: null
+  cached_network_image:
+  
 dev_dependencies:
   flutter_test:
     sdk: flutter

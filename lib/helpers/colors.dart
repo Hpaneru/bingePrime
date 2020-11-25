@@ -10,6 +10,7 @@ class AppColors {
   static Color highlightColor = Color(0xff3E4A59);
   static Color black = Color(0xff000000);
   static Color red = Color(0xffff474d);
+  static Color settingTextColor = Color(0xff919191);
 
   static List<Color> gradientColors = [
     Color(0xff0D0A25),
