@@ -39,9 +39,14 @@ class _SplashScreenState extends State<SplashScreen> {
       }
     } else {
       try {
-        await firebase.init();
-        Navigator.pushNamedAndRemoveUntil(
-            context, "/homeScreen", (predicate) => false);
+        bool valid = await firebase.checkUserStatus(user);
+        if (valid) {
+          await firebase.init();
+          Navigator.pushNamedAndRemoveUntil(
+              context, "/homeScreen", (predicate) => false);
+        } else {
+          await firebase.logout();
+        }
       } catch (e) {
         print(e.message);
       }

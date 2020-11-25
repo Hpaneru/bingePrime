@@ -1,6 +1,7 @@
 import 'package:binge_prime/models/user.dart';
 import 'package:binge_prime/models/video.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:cloud_functions/cloud_functions.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
@@ -8,10 +9,12 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 class _FirebaseHelper {
   FirebaseMessaging _messaging = FirebaseMessaging();
   FirebaseAnalytics _analytics = FirebaseAnalytics();
+  CloudFunctions functions = CloudFunctions.instance;
   FirebaseAuth _auth = FirebaseAuth.instance;
   Firestore _firestore = Firestore();
   FirebaseUser _user;
   User _me;
+  String userType;
 
   init() async {
     _auth.onAuthStateChanged.listen((user) async {
@@ -22,6 +25,22 @@ class _FirebaseHelper {
   bool isEmail(String em) => RegExp(
           r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$')
       .hasMatch(em);
+
+  checkUserStatus(FirebaseUser user) async {
+    if (user != null) {
+      if (userType == "endUser") {
+        return true;
+      }
+      _user = user;
+      var tokenData = await user.getIdToken(refresh: true);
+      if (tokenData.claims["endUser"] == true) {
+        userType = "endUser";
+        return true;
+      }
+      return false;
+    }
+    return false;
+  }
 
   Future<FirebaseUser> login(email, password) async {
     AuthResult result = await _auth.signInWithEmailAndPassword(
@@ -36,11 +55,23 @@ class _FirebaseHelper {
             email: email, password: password))
         .user;
     _user = user;
-    var info = UserUpdateInfo();
-    info.displayName = name;
-    await _user.updateProfile(info);
-    _user = await _auth.currentUser();
-    await manageFirestore();
+    try {
+      if (user != null) {
+        await functions
+            .getHttpsCallable(functionName: "authGroup-setDoctorClaims")
+            .call({"uid": user.uid});
+        this.userType = "endUser";
+        var info = UserUpdateInfo();
+        info.displayName = name;
+        await _user.updateProfile(info);
+        _user = await _auth.currentUser();
+        await manageFirestore();
+      }
+    } catch (e) {
+      await functions
+          .getHttpsCallable(functionName: "authGroup-deleteAccount")
+          .call({"uid": user.uid});
+    }
   }
 
   Future manageFirestore() async {

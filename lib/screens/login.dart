@@ -19,6 +19,19 @@ class _LoginScreenState extends State<LoginScreen> {
   String email, password;
   bool showPassword = false, loading = false;
 
+  handleResult(user) async {
+    bool valid = await firebase.checkUserStatus(user);
+    if (valid) {
+      Navigator.pushNamedAndRemoveUntil(
+          context, "/homeScreen", (predicate) => false);
+    } else {
+      if (user != null) {
+        showSnackbar("Invalid User, PLease login via our admin application");
+      }
+      await firebase.logout();
+    }
+  }
+
   showSnackbar(message) {
     _scaffoldKey.currentState.showSnackBar(SnackBar(
       backgroundColor: Theme.of(context).accentColor,
@@ -41,10 +54,9 @@ class _LoginScreenState extends State<LoginScreen> {
       return;
     } else {
       showLoading(true);
-      firebase.login(email, password).then((user) {
+      firebase.login(email, password).then((user) async {
+        await handleResult(user);
         showLoading(false);
-        Navigator.pushNamedAndRemoveUntil(
-            context, "/homeScreen", (predicate) => false);
       }).catchError((err) {
         showLoading(false);
         showSnackbar(err.message);
